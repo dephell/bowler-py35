@@ -61,10 +61,10 @@ class ToolTest(TestCase):
         self.addCleanup(self.cleanup_files)
 
     def cleanup_files(self):
-        if os.path.isfile(self.orig_file):
-            os.rename(self.orig_file, target)
-        if os.path.isfile(self.rej_file):
-            os.remove(self.rej_file)
+        if os.path.isfile(str(self.orig_file)):
+            os.rename(str(self.orig_file), str(target))
+        if os.path.isfile(str(self.rej_file)):
+            os.remove(str(self.rej_file))
 
     @mock.patch("bowler.tool.sh.patch")
     def test_process_hunks_patch_called_correctly(self, mock_patch):
@@ -85,8 +85,8 @@ class ToolTest(TestCase):
         mock_log.assert_called_with(
             "hunks failed to apply, rejects saved to {}.rej".format(target)
         )
-        self.assertTrue(os.path.isfile(self.rej_file))
-        self.assertTrue(os.path.isfile(self.orig_file))
+        self.assertTrue(os.path.isfile(str(self.rej_file)))
+        self.assertTrue(os.path.isfile(str(self.orig_file)))
 
     @mock.patch.object(log, "exception")
     def test_process_hunks_no_hunks(self, mock_log):
