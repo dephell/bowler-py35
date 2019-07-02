@@ -7,7 +7,7 @@
 
 from typing import Any, Callable, Dict, List, NewType, Optional, Type, Union
 
-from attr import Factory, dataclass
+import attr
 from fissix.fixer_base import BaseFix
 from fissix.pgen2 import token
 from fissix.pygram import python_symbols
@@ -51,13 +51,13 @@ Hunk = List[str]
 Processor = Callable[[Filename, Hunk], bool]
 
 
-@dataclass
+@attr.s()
 class Transform:
-    selector: str = ""
-    kwargs: Dict[str, Any] = Factory(dict)
-    filters: List[Filter] = Factory(list)
-    callbacks: List[Callback] = Factory(list)
-    fixer: Optional[Type[BaseFix]] = None
+    selector = attr.ib(default="")
+    kwargs = attr.ib(factory=dict)
+    filters = attr.ib(factory=list)
+    callbacks = attr.ib(factory=list)
+    fixer = attr.ib(default=None)
 
 
 class BowlerException(Exception):

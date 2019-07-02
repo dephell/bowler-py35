@@ -145,7 +145,7 @@ def is_call_to(node: LN, func_name: str) -> bool:
 
 
 def find_first(node: LN, target: int, recursive: bool = False) -> Optional[LN]:
-    queue: List[LN] = [node]
+    queue = [node]
     queue.extend(node.children)
     while queue:
         child = queue.pop(0)
@@ -175,7 +175,7 @@ def find_next(node: LN, target: int, recursive: bool = False) -> Optional[LN]:
 
 
 def find_last(node: LN, target: int, recursive: bool = False) -> Optional[LN]:
-    queue: List[LN] = []
+    queue = []
     queue.extend(reversed(node.children))
     while queue:
         child = queue.pop(0)
