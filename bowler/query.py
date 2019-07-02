@@ -85,17 +85,13 @@ def selector(pattern: str) -> Callable[[QM], QM]:
 
 
 class Query:
-    def __init__(
-        self,
-        *paths: Union[str, List[str]],
-        filename_matcher: Optional[FilenameMatcher] = None,
-    ) -> None:
-        self.paths: List[str] = []
-        self.transforms: List[Transform] = []
-        self.processors: List[Processor] = []
-        self.retcode: Optional[int] = None
+    def __init__(self, *paths, filename_matcher=None) -> None:
+        self.paths = []
+        self.transforms = []
+        self.processors = []
+        self.retcode = None
         self.filename_matcher = filename_matcher
-        self.exceptions: List[BowlerException] = []
+        self.exceptions = []
 
         for path in paths:
             if isinstance(path, str):
@@ -475,7 +471,7 @@ class Query:
 
         make_property = Once()
         old_name = transform.kwargs["name"]
-        new_name = internal_name or f"_{old_name}"
+        new_name = internal_name or "_{}".format(old_name)
 
         if new_name.startswith("__"):
             raise ValueError(
@@ -648,7 +644,7 @@ class Query:
             log.debug("{} [{}]: {}".format(filename, list(capture), node))
 
             # If two keys reference the same underlying object, do not modify it twice
-            visited: List[LN] = []
+            visited  = []
             for _key, value in capture.items():
                 log.debug("{}: {}".format(_key, value))
                 if value in visited:
@@ -963,7 +959,7 @@ class Query:
             log.debug("no selectors chosen, defaulting to select_root")
             self.select_root()
 
-        fixers: List[Type[BaseFix]] = []
+        fixers  = []
         for transform in self.transforms:
             fixers.append(self.create_fixer(transform))
 

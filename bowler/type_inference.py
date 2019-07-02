@@ -60,7 +60,7 @@ class InferredType(enum.IntEnum):
 
 
 # Note: SLASH and DOUBLESLASH are specialcased.
-OP_MIN_TYPE: Dict = {
+OP_MIN_TYPE = {
     TOKEN.PLUS: InferredType.INT,
     TOKEN.MINUS: InferredType.INT,
     TOKEN.STAR: InferredType.INT,

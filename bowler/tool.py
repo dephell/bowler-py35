@@ -72,7 +72,7 @@ def prompt_user(question: str, options: str, default: str = "") -> str:
             return result
 
         elif result:
-            click.echo(f'invalid response "{result}"')
+            click.echo('invalid response "{}"'.format(result))
 
         elif default:
             return default
@@ -83,17 +83,16 @@ class BowlerTool(RefactoringTool):
     IN_PROCESS = False  # set when run DEBUG mode from command line
 
     def __init__(
-        self,
-        fixers: Fixers,
-        *args,
-        interactive: bool = True,
-        write: bool = False,
-        silent: bool = False,
-        in_process: bool = False,
-        hunk_processor: Processor = None,
-        filename_matcher: Optional[FilenameMatcher] = None,
-        **kwargs,
-    ) -> None:
+            self,
+            fixers: Fixers,
+            *args,
+            interactive: bool = True,
+            write: bool = False,
+            silent: bool = False,
+            in_process: bool = False,
+            hunk_processor: Processor = None,
+            filename_matcher: Optional[FilenameMatcher] = None,
+            **kwargs) -> None:
         options = kwargs.pop("options", {})
         options["print_function"] = True
         super().__init__(fixers, *args, options=options, **kwargs)
@@ -106,7 +105,7 @@ class BowlerTool(RefactoringTool):
         self.silent = silent
         # pick the most restrictive of flags
         self.in_process = in_process or self.IN_PROCESS
-        self.exceptions: List[BowlerException] = []
+        self.exceptions = []
         if hunk_processor is not None:
             self.hunk_processor = hunk_processor
         else:
@@ -118,19 +117,19 @@ class BowlerTool(RefactoringTool):
 
     def get_fixers(self) -> Tuple[Fixers, Fixers]:
         fixers = [f(self.options, self.fixer_log) for f in self.fixers]
-        pre: Fixers = [f for f in fixers if f.order == "pre"]
-        post: Fixers = [f for f in fixers if f.order == "post"]
+        pre = [f for f in fixers if f.order == "pre"]
+        post = [f for f in fixers if f.order == "post"]
         return pre, post
 
     def processed_file(
         self, new_text: str, filename: str, old_text: str = "", *args, **kwargs
     ) -> List[Hunk]:
         self.files.append(filename)
-        hunks: List[Hunk] = []
+        hunks = []
         if old_text != new_text:
             a, b, *lines = list(diff_texts(old_text, new_text, filename))
 
-            hunk: Hunk = []
+            hunk = []
             for line in lines:
                 if line.startswith("@@"):
                     if hunk:
@@ -156,7 +155,7 @@ class BowlerTool(RefactoringTool):
 
     def refactor_file(self, filename: str, *a, **k) -> List[Hunk]:
         try:
-            hunks: List[Hunk] = []
+            hunks = []
             input, encoding = self._read_python_source(filename)
             if input is None:
                 # Reading the file failed.
@@ -236,7 +235,7 @@ class BowlerTool(RefactoringTool):
             else:
                 self.queue_work(Filename(dir_or_file))
 
-        children: List[multiprocessing.Process] = []
+        children = []
         if self.in_process:
             self.queue.put(None)
             self.refactor_queue()
