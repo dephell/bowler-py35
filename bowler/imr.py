@@ -196,7 +196,7 @@ class FunctionArgument:
 class FunctionSpec:
     name = attr.ib()
     arguments = attr.ib()
-    as_def = attr.ib()
+    is_def = attr.ib()
     capture = attr.ib()
     node = attr.ib()
 

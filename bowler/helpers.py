@@ -64,7 +64,7 @@ def print_tree(
     else:
         click.echo(
             click.style(tab, fg="black", bold=True)
-            + click.style("[{}] {} {}".format(tok_name[node.type], repr(node.prefix)), fg="blue")
+            + click.style("[{}] {}".format(type_repr(node.type), repr(node.prefix)), fg="blue")
         )
 
     if node.children:
