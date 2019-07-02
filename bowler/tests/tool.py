@@ -94,7 +94,7 @@ class ToolTest(TestCase):
         empty_hunks = [[]]
         tool.process_hunks(target, empty_hunks)
         patch_stderr = "/usr/bin/patch: **** Only garbage was found in the patch input."
-        mock_log.assert_called_with(f"failed to apply patch hunk: {patch_stderr}")
+        mock_log.assert_called_with("failed to apply patch hunk: {}".format(patch_stderr))
 
     @mock.patch("bowler.tool.prompt_user")
     @mock.patch("bowler.tool.sh.patch")

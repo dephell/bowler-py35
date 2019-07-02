@@ -645,12 +645,12 @@ class Query:
         old_name = transform.kwargs["name"]
 
         def rename_transform(node: LN, capture: Capture, filename: Filename) -> None:
-            log.debug(f"{filename} [{list(capture)}]: {node}")
+            log.debug("{} [{}]: {}".format(filename, list(capture), node))
 
             # If two keys reference the same underlying object, do not modify it twice
             visited: List[LN] = []
             for _key, value in capture.items():
-                log.debug(f"{_key}: {value}")
+                log.debug("{}: {}".format(_key, value))
                 if value in visited:
                     continue
                 visited.append(value)
@@ -730,7 +730,7 @@ class Query:
                 )
             signature = inspect.signature(transform.kwargs["source"])
             if after not in (SENTINEL, START) and after not in signature.parameters:
-                raise ValueError(f"{after} does not exist in original function")
+                raise ValueError("{} does not exist in original function".format(after))
 
             names = list(signature.parameters)
             stop_at = names.index(cast(str, after))
@@ -775,7 +775,7 @@ class Query:
                 new_arg = FunctionArgument(value=value_leaf)
                 for index, argument in enumerate(spec.arguments):
                     if argument.star and argument.star.type == TOKEN.STAR:
-                        log.debug(f"noping out due to *{argument.name}")
+                        log.debug("noping out due to *{}".format(argument.name))
                         done = True
                         break
 
@@ -806,7 +806,7 @@ class Query:
     ) -> "Query":
         transform = self.current
         if transform.selector not in ("function", "method"):
-            raise ValueError(f"modifier must follow select_function or select_method")
+            raise ValueError("modifier must follow select_function or select_method")
 
         def modify_argument_transform(
             node: Node, capture: Capture, filename: Filename
@@ -833,7 +833,7 @@ class Query:
     def remove_argument(self, name: str) -> "Query":
         transform = self.current
         if transform.selector not in ("function", "method"):
-            raise ValueError(f"modifier must follow select_function or select_method")
+            raise ValueError("modifier must follow select_function or select_method")
 
         # determine correct position (excluding self/cls) to add new argument
         stop_at = -1
@@ -841,7 +841,7 @@ class Query:
             raise ValueError("remove_argument requires passing original function")
         signature = inspect.signature(transform.kwargs["source"])
         if name not in signature.parameters:
-            raise ValueError(f"{name} does not exist in original function")
+            raise ValueError("{} does not exist in original function".format(name))
 
         if signature.parameters[name].kind in (
             inspect.Parameter.VAR_KEYWORD,
@@ -924,7 +924,6 @@ class Query:
 
         else:
             bm_compat = False
-            log.debug(f"select {transform.selector}[{transform.kwargs}]")
             pattern = SELECTORS[transform.selector].format(**transform.kwargs)
 
             pattern = " ".join(
@@ -934,13 +933,8 @@ class Query:
                 if line
             )
 
-            log.debug(f"generated pattern: {pattern}")
-
         filters = transform.filters
         callbacks = transform.callbacks
-
-        log.debug(f"registered {len(filters)} filters: {filters}")
-        log.debug(f"registered {len(callbacks)} callbacks: {callbacks}")
 
         class Fixer(BaseFix):
             PATTERN = pattern  # type: ignore
@@ -966,7 +960,7 @@ class Query:
 
     def compile(self) -> List[Type[BaseFix]]:
         if not self.transforms:
-            log.debug(f"no selectors chosen, defaulting to select_root")
+            log.debug("no selectors chosen, defaulting to select_root")
             self.select_root()
 
         fixers: List[Type[BaseFix]] = []

@@ -77,7 +77,7 @@ def _produce_test(lcals, gen_func, args):
 
 
 def tree(input: str) -> LN:
-    print(f"Input is {repr(input)}")
+    print("Input is {}".format(repr(input)))
     driver = Driver(pygram.python_grammar_no_print_statement, convert=pytree.convert)
     return driver.parse_string(input)
 
