@@ -27,7 +27,7 @@ def main(ctx: click.Context, debug: bool, version: bool) -> None:
     if version:
         from bowler import __version__
 
-        click.echo(f"bowler {__version__}")
+        click.echo("bowler {}".format(__version__))
         return
 
     if debug:
@@ -132,7 +132,7 @@ def run(codemod: str, argv: List[str]) -> None:
             main()
 
     except ImportError as e:
-        raise click.ClickException(f"failed to import codemod: {e}") from e
+        raise click.ClickException("failed to import codemod: {}".format(e)) from e
 
     finally:
         sys.argv[1:] = original_argv
