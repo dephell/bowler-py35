@@ -5,7 +5,7 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
 with open("README.md") as f:
     readme = f.read()
@@ -39,7 +39,7 @@ setup(
     license="MIT",
     packages=["bowler", "bowler.tests"],
     test_suite="bowler.tests",
-    python_requires=">=3.6",
+    python_requires=">=3.5",
     setup_requires=["setuptools>=38.6.0"],
     install_requires=requires,
     entry_points={"console_scripts": ["bowler = bowler.main:main"]},
