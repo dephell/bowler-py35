@@ -126,7 +126,7 @@ class OpMinTypeTest(BowlerTestCase):
     def gen_test_uniop(op):
         def test_uniop(self):
             for rhs in ("True", "1", "1.0", "2j"):
-                snippet = "{op} {rhs}\n".format(op, rhs)
+                snippet = "{} {}\n".format(op, rhs)
                 try:
                     real_result = eval(snippet, {}, {})
                 except TypeError:
