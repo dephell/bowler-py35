@@ -32,7 +32,7 @@ setup(
     license="MIT",
     packages=["bowler", "bowler.tests"],
     test_suite="bowler.tests",
-    python_requires=">=3.6",
+    python_requires=">=3.5",
     setup_requires=["setuptools>=38.6.0"],
     install_requires=["attrs", "click", "fissix-py35", "sh"],
     entry_points={"console_scripts": ["bowler = bowler.main:main"]},

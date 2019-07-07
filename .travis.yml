@@ -1,18 +1,32 @@
 language: python
 dist: xenial
 sudo: required
-env:
+
 python:
+    - "3.5"
     - "3.6"
     - "3.7"
-    - "3.8-dev"
 install:
     - "make setup"
     - "pip install -U ."
 script:
-    - "make lint test"
+    - python3 -m coverage run -m bowler.tests
+    - python3 -m coverage report
 after_success:
     - "coveralls"
+
 matrix:
-    allow_failures:
-        - python: "3.8-dev"
+  include:
+    - name: black
+      python: "3.7"
+      install:
+        - pip install black
+      script:
+        - black --check bowler setup.py
+
+    - name: mypy
+      python: "3.7"
+      install:
+        - pip install mypy
+      script:
+        - mypy -m bowler
