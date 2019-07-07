@@ -1,5 +1,3 @@
-<a href="https://pybowler.io"><img alt="Bowler" height="96" src="https://github.com/facebookincubator/Bowler/raw/master/website/static/img/logo/Bowler_FullColor_DarkText.png" /></a>
-
 **Safe code refactoring for modern Python projects.**
 
 [![build status](https://travis-ci.com/facebookincubator/Bowler.svg?branch=master)](https://travis-ci.com/facebookincubator/Bowler)
