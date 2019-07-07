@@ -8,7 +8,7 @@
 import logging
 from typing import Any, List, Optional
 
-from attr import dataclass
+import attr
 from fissix.fixer_util import LParen, Name
 
 from .helpers import find_last
@@ -28,13 +28,13 @@ from .types import (
 log = logging.getLogger(__name__)
 
 
-@dataclass
+@attr.s()
 class FunctionArgument:
-    name: str = ""
-    value: Any = None
-    annotation: str = ""
-    star: Optional[Leaf] = None
-    prefix: Optional[str] = None
+    name = attr.ib(default='')
+    value = attr.ib(default=None)
+    annotation = attr.ib(default='')
+    star = attr.ib(default=None)
+    prefix = attr.ib(default=None)
 
     @classmethod
     def build(cls, leaf: Leaf, is_def: bool, **kwargs: Any) -> "FunctionArgument":
@@ -70,10 +70,8 @@ class FunctionArgument:
         return FunctionArgument(**kwargs)
 
     @classmethod
-    def build_list(
-        cls, arguments: List[Leaf], is_def: bool
-    ) -> List["FunctionArgument"]:
-        result: List[FunctionArgument] = []
+    def build_list(cls, arguments: List[Leaf], is_def: bool) -> List["FunctionArgument"]:
+        result = []
 
         # empty function
         if not arguments:
@@ -87,23 +85,23 @@ class FunctionArgument:
 
         while leaf is not None:
             arg = cls.build(leaf, is_def)
-            log.debug(f"{leaf} -> {arg}")
+            log.debug("{leaf} -> {arg}".format(leaf=leaf, arg=arg))
             result.append(arg)
 
             # consume leafs for this argument
             while leaf is not None and leaf.type not in ARG_END:
-                log.debug(f"consuming {leaf}")
+                log.debug("consuming {}".format(leaf))
                 leaf = leaf.next_sibling
 
             # assume we stopped on a comma or parenthesis
             if leaf:
-                log.debug(f"separator {leaf}")
+                log.debug("separator {}".format(leaf))
                 leaf = leaf.next_sibling
 
         return result
 
     def explode(self, is_def: bool, prefix: str = "") -> List[LN]:
-        result: List[LN] = []
+        result = []
         prefix = self.prefix if self.prefix else prefix
         if is_def:
             if self.star:
@@ -168,7 +166,7 @@ class FunctionArgument:
     def explode_list(
         cls, arguments: List["FunctionArgument"], is_def: bool
     ) -> Optional[LN]:
-        nodes: List[LN] = []
+        nodes = []
         prefix = ""
         index = 0
         for argument in arguments:
@@ -177,7 +175,7 @@ class FunctionArgument:
                 prefix = " "
 
             result = argument.explode(is_def, prefix=prefix)
-            log.debug(f"{argument} -> {result}")
+            log.debug("{} -> {}".format(argument, result))
             nodes.extend(result)
             index += 1
 
@@ -194,13 +192,13 @@ class FunctionArgument:
             return Node(SYMBOL.arglist, nodes, prefix=nodes[0].prefix)
 
 
-@dataclass
+@attr.s()
 class FunctionSpec:
-    name: str
-    arguments: List[FunctionArgument]
-    is_def: bool
-    capture: Capture
-    node: Node
+    name = attr.ib()
+    arguments = attr.ib()
+    is_def = attr.ib()
+    capture = attr.ib()
+    node = attr.ib()
 
     @classmethod
     def build(cls, node: Node, capture: Capture) -> "FunctionSpec":

@@ -77,7 +77,7 @@ def _produce_test(lcals, gen_func, args):
 
 
 def tree(input: str) -> LN:
-    print(f"Input is {repr(input)}")
+    print("Input is {}".format(repr(input)))
     driver = Driver(pygram.python_grammar_no_print_statement, convert=pytree.convert)
     return driver.parse_string(input)
 
@@ -114,7 +114,7 @@ class OpMinTypeTest(BowlerTestCase):
         def test_binop(self):
             for lhs in ("True", "1", "1.0", "2j"):
                 for rhs in ("True", "1", "1.0", "2j"):
-                    snippet = f"{lhs} {op} {rhs}\n"
+                    snippet = "{} {} {}\n".format(lhs, op, rhs)
                     try:
                         real_result = eval(snippet, {}, {})
                     except TypeError:
@@ -126,7 +126,7 @@ class OpMinTypeTest(BowlerTestCase):
     def gen_test_uniop(op):
         def test_uniop(self):
             for rhs in ("True", "1", "1.0", "2j"):
-                snippet = f"{op} {rhs}\n"
+                snippet = "{} {}\n".format(op, rhs)
                 try:
                     real_result = eval(snippet, {}, {})
                 except TypeError:
@@ -137,7 +137,7 @@ class OpMinTypeTest(BowlerTestCase):
 
     def gen_test_min_type(op):
         def test_min_type(self):
-            snippet = f"True {op} True\n"
+            snippet = "True {} True\n".format(op)
             real_result = eval(snippet, {}, {})
 
             t = tree(snippet)
@@ -152,7 +152,7 @@ class OpMinTypeTest(BowlerTestCase):
 
     def gen_test_min_type_unary(op):
         def test_min_type_unary(self):
-            snippet = f"{op} True\n"
+            snippet = "{} True\n".format(op)
             real_result = eval(snippet, {}, {})
 
             t = tree(snippet)
