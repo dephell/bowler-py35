@@ -16,7 +16,7 @@ setup(
     description="Safe code refactoring for modern Python projects",
     long_description=readme,
     long_description_content_type="text/markdown",
-    version="0.9.0",
+    version="0.9.1",
     author="John Reese, Facebook",
     author_email="jreese@fb.com",
     url="https://github.com/facebookincubator/bowler",
