@@ -3,7 +3,7 @@ venv:
 	@echo 'run `source .venv/bin/activate` to use virtualenv'
 
 setup:
-	python3 -m pip install -Ur requirements.txt
+	python3 -m pip install .
 	python3 -m pip install -Ur requirements-dev.txt
 
 dev: venv

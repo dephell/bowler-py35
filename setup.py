@@ -5,25 +5,18 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
 with open("README.md") as f:
     readme = f.read()
 
-with open("bowler/__init__.py") as f:
-    for line in f:
-        if line.startswith("__version__"):
-            version = line.split('"')[1]
-
-with open("requirements.txt") as f:
-    requires = f.read().strip().splitlines()
 
 setup(
-    name="bowler",
+    name="bowler-py35",
     description="Safe code refactoring for modern Python projects",
     long_description=readme,
     long_description_content_type="text/markdown",
-    version=version,
+    version="0.9.0",
     author="John Reese, Facebook",
     author_email="jreese@fb.com",
     url="https://github.com/facebookincubator/bowler",
@@ -41,6 +34,6 @@ setup(
     test_suite="bowler.tests",
     python_requires=">=3.6",
     setup_requires=["setuptools>=38.6.0"],
-    install_requires=requires,
+    install_requires=["attrs", "click", "fissix-py35", "sh"],
     entry_points={"console_scripts": ["bowler = bowler.main:main"]},
 )
