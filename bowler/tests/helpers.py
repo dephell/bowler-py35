@@ -5,6 +5,7 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+from collections import OrderedDict
 import unittest
 
 from fissix.pytree import Leaf, Node
@@ -44,7 +45,10 @@ results['op'] =
 .  [PLUS] ' ' '+'
 results['rhs'] = [Leaf(2, '1'), Leaf(14, '+'), Leaf(2, '2')]
 """
-        print_tree(node, {"op": node.children[1], "rhs": node.children[2:]})
+        d = OrderedDict()
+        d['op'] = node.children[1]
+        d['rhs'] = node.children[2:]
+        print_tree(node, d)
         self.assertMultiLineEqual(expected, self.buffer.getvalue())
 
     def test_print_tree_recurse_limit(self):

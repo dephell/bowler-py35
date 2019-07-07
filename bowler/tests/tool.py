@@ -16,8 +16,8 @@ from ..types import BowlerQuit
 target = Path(__file__).parent / "smoke-target.py"
 hunks = [
     [
-        f"--- {target}",
-        f"+++ {target}",
+        "--- {}".format(target),
+        "+++ {}".format(target),
         "@@ -7,8 +7,8 @@",
         " ",
         " ",
@@ -31,8 +31,8 @@ hunks = [
         "     pass",
     ],
     [
-        f"--- {target}",
-        f"+++ {target}",
+        "--- {}".format(target),
+        "+++ {}".format(target),
         "@@ -10,11 +10,11 @@",
         " ",
         " ",
@@ -61,10 +61,10 @@ class ToolTest(TestCase):
         self.addCleanup(self.cleanup_files)
 
     def cleanup_files(self):
-        if os.path.isfile(self.orig_file):
-            os.rename(self.orig_file, target)
-        if os.path.isfile(self.rej_file):
-            os.remove(self.rej_file)
+        if os.path.isfile(str(self.orig_file)):
+            os.rename(str(self.orig_file), str(target))
+        if os.path.isfile(str(self.rej_file)):
+            os.remove(str(self.rej_file))
 
     @mock.patch("bowler.tool.sh.patch")
     def test_process_hunks_patch_called_correctly(self, mock_patch):
@@ -74,7 +74,7 @@ class ToolTest(TestCase):
         string_hunks = ""
         for hunk in hunks:
             string_hunks += "\n".join(hunk[2:]) + "\n"
-        string_hunks = f"--- {target}\n+++ {target}\n" + string_hunks
+        string_hunks = "--- {}\n+++ {}\n".format(target, target) + string_hunks
         mock_patch.assert_called_with("-u", target, _in=string_hunks.encode("utf-8"))
 
     @mock.patch.object(log, "exception")
@@ -83,10 +83,10 @@ class ToolTest(TestCase):
 
         tool.process_hunks(target, hunks)
         mock_log.assert_called_with(
-            f"hunks failed to apply, rejects saved to {target}.rej"
+            "hunks failed to apply, rejects saved to {}.rej".format(target)
         )
-        self.assertTrue(os.path.isfile(self.rej_file))
-        self.assertTrue(os.path.isfile(self.orig_file))
+        self.assertTrue(os.path.isfile(str(self.rej_file)))
+        self.assertTrue(os.path.isfile(str(self.orig_file)))
 
     @mock.patch.object(log, "exception")
     def test_process_hunks_no_hunks(self, mock_log):
@@ -94,7 +94,7 @@ class ToolTest(TestCase):
         empty_hunks = [[]]
         tool.process_hunks(target, empty_hunks)
         patch_stderr = "/usr/bin/patch: **** Only garbage was found in the patch input."
-        mock_log.assert_called_with(f"failed to apply patch hunk: {patch_stderr}")
+        mock_log.assert_called_with("failed to apply patch hunk: {}".format(patch_stderr))
 
     @mock.patch("bowler.tool.prompt_user")
     @mock.patch("bowler.tool.sh.patch")
@@ -126,7 +126,7 @@ class ToolTest(TestCase):
         mock_prompt.side_effect = ["a"]
         tool.process_hunks(target, hunks)
         joined_hunks = "".join(["\n".join(hunk[2:]) + "\n" for hunk in hunks])
-        encoded_hunks = f"--- {target}\n+++ {target}\n{joined_hunks}".encode("utf-8")
+        encoded_hunks = "--- {}\n+++ {}\n{}".format(target, target, joined_hunks).encode("utf-8")
         mock_patch.assert_called_once_with("-u", target, _in=encoded_hunks)
 
     @mock.patch("bowler.tool.prompt_user")
